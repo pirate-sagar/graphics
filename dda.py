@@ -1,63 +1,36 @@
-import pygame
-import math
+from matplotlib import pyplot
 
 
-# DDA Line Drawing Function
-def dda_line(x1, y1, x2, y2):
-    dx = x2 - x1
-    dy = y2 - y1
+def dda(x0, y0, x1, y1):
+    dx = abs(x0 - x1)
+    dy = abs(y0 - y1)
 
-    # Determine the number of steps
-    steps = max(abs(dx), abs(dy))
+    steps = max(dx, dy)
 
-    # Calculate the increment for each step
-    xi = dx / steps
-    yi = dy / steps
+    xinc = dx / steps
+    yinc = dy / steps
 
-    # Starting point
-    xn = x1
-    yn = y1
+    x = float(x0)
+    y = float(y0)
 
-    # Draw the line
-    for _ in range(int(steps) + 1):
-        pygame.draw.circle(screen, (255, 255, 255), (round(xn), round(yn)), 1)  # Draw pixel
-        xn += xi
-        yn += yi
+    x_coorinates = []
+    y_coorinates = []
+
+    for i in range(steps):
+        x_coorinates.append(x)
+        y_coorinates.append(y)
+
+        x = x + xinc
+        y = y + yinc
+
+    pyplot.plot(x_coorinates, y_coorinates, marker="o",
+                markersize=1, markerfacecolor="green")
+    pyplot.show()
 
 
-# Initialize Pygame
-pygame.init()
-
-# Set up display
-width, height = 800, 800
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("DDA Line Drawing")
-
-# Set up the clock for managing frame rate
-clock = pygame.time.Clock()
-
-# Input coordinates
-x1, y1 = map(int, input("Enter x1 and y1: ").split())
-x2, y2 = map(int, input("Enter x2 and y2: ").split())
-
-# Main loop
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-    # Fill screen with black
-    screen.fill((0, 0, 0))
-
-    # Draw the line using DDA
-    dda_line(x1, y1, x2, y2)
-
-    # Update the display
-    pygame.display.flip()
-
-    # Cap the frame rate
-    clock.tick(60)
-
-# Quit Pygame
-pygame.quit()
+if __name__ == "__main__":
+    x0y0 = input("Enter x0 y0 respectively separated by a coma: ")
+    x0, y0 = int(x0y0.split(",")[0]), int(x0y0.split(",")[1])
+    x1y1 = input("Enter x1 y1 respectively separated by a coma: ")
+    x1, y1 = int(x1y1.split(",")[0]), int(x1y1.split(",")[1])
+    dda(x0, y0, x1, y1)
